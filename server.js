@@ -68,11 +68,20 @@ app.get('/postfach', (req, res) => {
 });
 
 app.get('/kreditBeantragen', (req, res) => {
-	res.render('kreditBeantragen.ejs',{});
+	res.render('kreditBeantragen.ejs',{
+		Kreditbetrag:120,
+		Zinssatz:10,
+		Laufzeit:2,
+		Meldung: ""
+	});
 });
 
 app.get('/ueberweisungAusfuehren', (req, res) => {
 	res.render('ueberweisungAusfuehren.ejs',{});
+});
+
+app.get('/profil', (req, res) => {
+	res.render('profil.ejs',{});
 });
 
 // Die Funktion app.get('/geldAnlegen...) wird abgearbeitet, wenn der Benutzer die Seite geldAnlegen
@@ -123,6 +132,30 @@ app.get('/login', (req, res) => {
 	res.render('login.ejs',{});
 });
 
+app.post('/kreditBeantragen', (req, res) => {
+
+	// Die Werte, die der Kunde im Formular eingegeben hat, werden an den Server gesendet.
+	// Der Wert der Variablen Betrag wird aus dem body der Kundenanfrage (req) ausgelesen und zugewiesen an die lokale Variable
+	// namens betrag.
+
+	let kreditbetrag = req.body.Kreditbetrag;
+	console.log("kreditBeantragen: Gewünschter Kreditbetrag: " + kreditbetrag + " Euro")
+
+	let zinssatz = req.body.Zinssatz;
+	console.log("kreditBeantragen: Gewünschter Zinssatz: " + zinssatz + " %")
+
+	let laufzeit = req.body.Laufzeit;
+	console.log("kreditBeantragen: Gewünschte Laufzeit: " + laufzeit + " Jahre")
+
+	let rückzahlungsbetrag = (kreditbetrag * (zinssatz/100)) * laufzeit;
+
+	res.render('kreditBeantragen.ejs',{
+		Kreditbetrag: kreditbetrag,
+		Zinssatz: zinssatz,
+		Laufzeit: laufzeit,
+		Meldung: "Ihr Rückzahlungsbetrag beträgt: " + rückzahlungsbetrag
+	});
+});
 
 
 // Mit listen() wird der Server angewiesen, auf den angegebenen Host und
